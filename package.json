@@ -1,0 +1,32 @@
+{
+  "name": "cans-studio",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --configLoader runner",
+    "build": "tsc && vite build --configLoader runner",
+    "preview": "vite preview --host 127.0.0.1 --configLoader runner",
+    "android:add": "cap add android",
+    "android:assets": "npx --cache .npm-cache --yes @capacitor/assets generate --assetPath resources --android && node scripts/ensure-android-themed-icon.mjs",
+    "android:sync": "npm run build && cap sync android",
+    "android:open": "cap open android",
+    "android:build": "npm run build && npm run android:assets && cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.4.1",
+    "@capacitor/app": "^8.1.0",
+    "@capacitor/core": "^8.4.1",
+    "@vitejs/plugin-react": "^5.1.1",
+    "lucide-react": "^0.562.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.7",
+    "write-excel-file": "^4.1.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.4.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3"
+  }
+}
