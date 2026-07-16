@@ -134,7 +134,9 @@ interface ManualDetail {
   title: string;
   manualTitle: string;
   source: string;
-  text: string;
+  page: number;
+  description: string;
+  scoreHints: Record<string, string>;
   match: number;
 }
 
@@ -623,123 +625,6 @@ const statusLabel = (status: AdministrationStatus) => {
   if (status === "completed") return "Completata";
   if (status === "suspended") return "Sospesa";
   return "In corso";
-};
-
-const cleanManualLines = (parts: string[]) =>
-  parts.reduce((text, part) => {
-    const cleaned = part.replace(/\s+/g, " ").trim();
-    if (!cleaned) return text;
-    if (!text) return cleaned;
-    if (/[\p{L}]-$/u.test(text) && /^\p{Ll}/u.test(cleaned)) {
-      return `${text.slice(0, -1)}${cleaned}`;
-    }
-    return `${text} ${cleaned}`;
-  }, "");
-
-const isTrailingManualHeading = (line: string) => {
-  const letters = line.replace(/[^\p{L}]/gu, "");
-  if (letters.length < 7) return false;
-  const upper = letters.replace(/[^\p{Lu}]/gu, "").length;
-  return upper / letters.length > 0.86 && line.length < 120;
-};
-
-const parseManualDetail = (detail: ManualDetail): ParsedManualDetail => {
-  const lines = detail.text
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter(Boolean);
-  const markerPattern = /^([0-3])(?:\s+(.*))?$/;
-  const markers: { score: number; index: number; trailing: string }[] = [];
-  let expectedScore = 0;
-
-  lines.forEach((line, index) => {
-    const match = line.match(markerPattern);
-    if (!match || Number(match[1]) !== expectedScore) return;
-    markers.push({
-      score: expectedScore,
-      index,
-      trailing: match[2]?.trim() ?? "",
-    });
-    expectedScore += 1;
-  });
-
-  if (markers.length < 2) {
-    return { description: cleanManualLines(lines), scoreHints: [] };
-  }
-
-  const firstMarker = markers[0];
-  let evaluationCueIndex = -1;
-  for (let index = 0; index < firstMarker.index; index += 1) {
-    if (
-      /^(Valutare|Considerare|Per la punteggiatura|Punteggiare)/i.test(
-        lines[index],
-      )
-    ) {
-      evaluationCueIndex = index;
-    }
-  }
-  const estimatedStart = Math.max(
-    0,
-    firstMarker.index -
-      Math.ceil((markers[1].index - firstMarker.index) / 2),
-  );
-  const scoringStart = firstMarker.trailing
-    ? firstMarker.index
-    : evaluationCueIndex >= 0
-      ? evaluationCueIndex + 1
-      : estimatedStart;
-  const description = cleanManualLines(lines.slice(0, scoringStart));
-  const lastMarker = markers[markers.length - 1];
-  const stopIndex = lines.findIndex(
-    (line, index) =>
-      index > lastMarker.index &&
-      (line.startsWith("MODULO ") ||
-        line.startsWith("PUNTI DI FORZA ") ||
-        isTrailingManualHeading(line)),
-  );
-  const scoringEnd = stopIndex >= 0 ? stopIndex : lines.length;
-  const buckets = new Map<number, string[]>(
-    markers.map((marker) => [marker.score, []]),
-  );
-  let previousText: { score: number; text: string } | undefined;
-
-  lines.slice(scoringStart, scoringEnd).forEach((line, offset) => {
-    const index = scoringStart + offset;
-    const exactMarker = markers.find((marker) => marker.index === index);
-    if (exactMarker) {
-      if (exactMarker.trailing) {
-        buckets.get(exactMarker.score)?.push(exactMarker.trailing);
-        previousText = { score: exactMarker.score, text: exactMarker.trailing };
-      }
-      return;
-    }
-
-    let nearest = markers.reduce((best, marker) => {
-      const distance = Math.abs(marker.index - index);
-      const bestDistance = Math.abs(best.index - index);
-      return distance < bestDistance ||
-        (distance === bestDistance && marker.score > best.score)
-        ? marker
-        : best;
-    }, markers[0]);
-    if (
-      previousText &&
-      /[\p{L}]-$/u.test(previousText.text) &&
-      /^\p{Ll}/u.test(line)
-    ) {
-      nearest = markers.find((marker) => marker.score === previousText?.score) ?? nearest;
-    }
-    buckets.get(nearest.score)?.push(line);
-    previousText = { score: nearest.score, text: line };
-  });
-
-  return {
-    description,
-    scoreHints: markers.map((marker) => ({
-      score: marker.score,
-      text: cleanManualLines(buckets.get(marker.score) ?? []),
-    })),
-  };
 };
 
 const bytesToBase64 = (bytes: Uint8Array) => {
@@ -3061,7 +2946,18 @@ function ItemInfoDialog({
   close: () => void;
 }) {
   const parsed = useMemo(
-    () => (detail ? parseManualDetail(detail) : undefined),
+    () =>
+      detail
+        ? {
+            description: detail.description,
+            scoreHints: Object.entries(detail.scoreHints)
+              .map(([score, text]) => ({
+                score: Number(score),
+                text,
+              }))
+              .sort((left, right) => left.score - right.score),
+          }
+        : undefined,
     [detail],
   );
   const scoreValues = item.kind === "binary" ? [0, 1] : [0, 1, 2, 3];
@@ -3222,7 +3118,7 @@ function ItemInfoDialog({
           <p>
             {guidanceOverride
               ? "Le modifiche sono salvate sul dispositivo e incluse nel backup cifrato."
-              : "Testo tratto dal manuale italiano allegato. Il giudizio clinico resta affidato al professionista formato CANS."}
+              : `Testo tratto dal manuale italiano allegato, pagina PDF ${detail?.page}. Il giudizio clinico resta affidato al professionista formato CANS.`}
           </p>
           <div className="inline-actions">
             {editing ? (
