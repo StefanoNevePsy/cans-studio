@@ -2777,3 +2777,215 @@ button:disabled {
     min-height: 23rem;
   }
 }
+
+/* Safe Area Insets for mobile and notch displays */
+body {
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+/* Sticky Domain Anchor Navigation */
+.domain-anchor-nav {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  padding: 0.5rem 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--space-4);
+  scrollbar-width: thin;
+}
+
+.domain-anchor-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 160ms ease;
+}
+
+.domain-anchor-chip:hover {
+  background: var(--surface-strong);
+  border-color: var(--primary);
+}
+
+.domain-anchor-chip .anchor-count {
+  padding: 0.1rem 0.45rem;
+  border-radius: 9999px;
+  background: var(--surface-strong);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.domain-anchor-chip.is-complete {
+  border-color: var(--success);
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.domain-anchor-chip.is-complete .anchor-count {
+  background: var(--success);
+  color: white;
+}
+
+/* Scoring Filters */
+.scoring-filters {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.missing-filter-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+/* Fusion Dialog Enhancements */
+.fusion-quick-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.discordant-badge {
+  display: inline-block;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-sm);
+  background: var(--warning-soft);
+  color: var(--warning);
+  font-size: 0.72rem;
+  font-weight: 600;
+  font-style: normal;
+  margin-top: 0.2rem;
+}
+
+/* Clinical Privacy Screen Lock */
+.lock-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  background: var(--bg);
+  padding: var(--space-4);
+}
+
+.lock-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-3);
+  max-width: 24rem;
+  padding: var(--space-6);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: 0 12px 32px color-mix(in oklch, var(--ink) 12%, transparent);
+}
+
+.lock-card svg {
+  color: var(--primary);
+}
+
+.lock-card h2 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.lock-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+/* Responsive Mobile & Tablet Drawer */
+.topbar-title-area {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.mobile-menu-toggle {
+  display: none;
+}
+
+.mobile-sidebar-close {
+  display: none;
+}
+
+.sidebar-backdrop {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .mobile-menu-toggle {
+    display: inline-flex;
+  }
+
+  .mobile-sidebar-close {
+    display: inline-flex;
+    margin-left: auto;
+  }
+
+  .sidebar {
+    position: fixed !important;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: min(20rem, 85vw) !important;
+    height: 100dvh !important;
+    transform: translateX(-105%);
+    transition: transform 220ms ease;
+    z-index: 100 !important;
+    box-shadow: none;
+  }
+
+  .sidebar.is-open {
+    transform: translateX(0);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.35);
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(2px);
+    z-index: 90;
+  }
+
+  .workspace {
+    margin-left: 0 !important;
+    padding: var(--space-3);
+  }
+
+  /* Improve touch targets on mobile/tablet */
+  .matrix-score-button {
+    min-height: 2.75rem;
+  }
+}
+
