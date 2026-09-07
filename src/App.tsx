@@ -947,7 +947,7 @@ function App() {
     setBirthDayDraft("");
     setBirthMonthDraft("");
     setBirthYearDraft("");
-    setNotice(`Creato il paziente ${patientName(patient)}.`);
+    setNotice(`Aggiunta la persona ${patientName(patient)}.`);
   };
 
   const addAssessment = (instrumentId: CansInstrument["id"]) => {
@@ -1270,7 +1270,7 @@ function App() {
     const { default: writeXlsxFile } = await import("write-excel-file/browser");
     const patientSheet: SheetData = [
       headerRow([
-        "ID globale paziente",
+        "ID globale persona",
         "Codice",
         "Nome",
         "Cognome",
@@ -1294,7 +1294,7 @@ function App() {
     const timepointSheet: SheetData = [
       headerRow([
         "ID T",
-        "Codice paziente",
+        "Codice persona",
         "Strumento",
         "Data",
         "Intervallo",
@@ -1325,7 +1325,7 @@ function App() {
       headerRow([
         "ID sottosomministrazione",
         "ID T",
-        "Codice paziente",
+        "Codice persona",
         "Fonte",
         "Ruolo/intervistato",
         "Compilante",
@@ -1397,7 +1397,7 @@ function App() {
     const scoreSheet: SheetData = [
       headerRow([
         "ID T",
-        "Codice paziente",
+        "Codice persona",
         "Intervallo",
         "Fonte",
         "Tipo",
@@ -1412,7 +1412,7 @@ function App() {
 
     await writeXlsxFile(
       [
-        { data: patientSheet, sheet: "Pazienti", stickyRowsCount: 1 },
+        { data: patientSheet, sheet: "Persone", stickyRowsCount: 1 },
         { data: timepointSheet, sheet: "Intervalli T", stickyRowsCount: 1 },
         {
           data: administrationSheet,
@@ -1530,7 +1530,7 @@ function App() {
       }));
       setBackupDialog(null);
       setNotice(
-        `Import completato: ${incoming.patients.length} pazienti e ${incoming.assessments.length} intervalli.`,
+        `Import completato: ${incoming.patients.length} persone e ${incoming.assessments.length} intervalli.`,
       );
     } catch {
       setBackupDialog((current) =>
@@ -1564,7 +1564,7 @@ function App() {
 
   return (
     <div className="app-shell">
-      <aside className="sidebar" aria-label="Pazienti">
+      <aside className="sidebar" aria-label="Persone">
         <div className="brand-block">
           <div className="brand-mark" aria-hidden="true">
             <Radar size={21} />
@@ -1584,7 +1584,7 @@ function App() {
 
         <label className="search-field">
           <Search size={16} aria-hidden="true" />
-          <span className="sr-only">Cerca paziente</span>
+          <span className="sr-only">Cerca persona</span>
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
@@ -1614,13 +1614,13 @@ function App() {
             </button>
           ))}
           {!filteredPatients.length && (
-            <p className="muted-copy compact">Nessun paziente corrispondente.</p>
+            <p className="muted-copy compact">Nessuna persona corrispondente.</p>
           )}
         </div>
 
         <div className="sidebar-footer">
           <div className="new-patient">
-            <p className="section-label">Nuovo paziente</p>
+            <p className="section-label">Nuova persona</p>
             <label>
               Nome
               <input
@@ -1685,7 +1685,7 @@ function App() {
                 !composeBirthDate(birthDayDraft, birthMonthDraft, birthYearDraft)
               }
             >
-              <Plus size={16} /> Aggiungi paziente
+              <Plus size={16} /> Aggiungi persona
             </button>
           </div>
 
@@ -1710,9 +1710,9 @@ function App() {
       <main className="workspace" id="main-content">
         <header className="topbar">
           <div>
-            <p className="eyeline">Paziente selezionato</p>
+            <p className="eyeline">Persona selezionata</p>
             <h1>
-              {selectedPatient ? patientName(selectedPatient) : "Nessun paziente selezionato"}
+              {selectedPatient ? patientName(selectedPatient) : "Nessuna persona selezionata"}
             </h1>
             <div className="meta-row">
               {selectedPatient && (
@@ -1939,7 +1939,7 @@ function HelpDialog({ close }: { close: () => void }) {
     icon: ReactNode;
   }[] = [
     { id: "overview", label: "Primi passi", icon: <Play size={17} /> },
-    { id: "patients", label: "Pazienti e tempi", icon: <UsersRound size={17} /> },
+    { id: "patients", label: "Persone e tempi", icon: <UsersRound size={17} /> },
     { id: "scoring", label: "Compilazione", icon: <ClipboardList size={17} /> },
     { id: "fusion", label: "Fusione", icon: <GitMerge size={17} /> },
     { id: "results", label: "Risultati", icon: <Radar size={17} /> },
@@ -1989,7 +1989,7 @@ function HelpDialog({ close }: { close: () => void }) {
                   description="Il flusso principale segue una sequenza stabile. Puoi interromperlo e riprenderlo senza perdere il lavoro."
                 />
                 <div className="help-workflow" aria-label="Flusso principale">
-                  <HelpStep icon={<UserRound size={18} />} title="Paziente">
+                  <HelpStep icon={<UserRound size={18} />} title="Persona">
                     Inserisci nome, cognome e data di nascita.
                   </HelpStep>
                   <ChevronRight size={18} aria-hidden="true" />
@@ -2036,14 +2036,14 @@ function HelpDialog({ close }: { close: () => void }) {
               <>
                 <HelpHeading
                   icon={<UsersRound size={22} />}
-                  title="Pazienti, intervalli e sottosomministrazioni"
-                  description="Ogni paziente può avere più valutazioni nel tempo e più fonti nello stesso intervallo."
+                  title="Persone, intervalli e sottosomministrazioni"
+                  description="Ogni persona può avere più valutazioni nel tempo e più fonti nello stesso intervallo."
                 />
                 <HelpFeatureRows
                   rows={[
                     {
                       icon: <UserRound size={18} />,
-                      title: "Creare e cercare un paziente",
+                      title: "Creare e cercare una persona",
                       text: "Compila l'anagrafica nella barra laterale. Il campo Cerca accetta nome, data o codice CANS.",
                     },
                     {
@@ -2121,7 +2121,7 @@ function HelpDialog({ close }: { close: () => void }) {
                 <HelpHeading
                   icon={<GitMerge size={22} />}
                   title="Confrontare e fondere le fonti"
-                  description="La fusione produce il punteggio definitivo del paziente per quello specifico intervallo T."
+                  description="La fusione produce il punteggio definitivo della persona per quello specifico intervallo T."
                 />
                 <HelpFeatureRows
                   rows={[
@@ -2205,7 +2205,7 @@ function HelpDialog({ close }: { close: () => void }) {
                     {
                       icon: <FileUp size={18} />,
                       title: "Importazione",
-                      text: "Importa un backup cifrato per unire pazienti, intervalli, fonti e testi personalizzati con quelli già presenti.",
+                      text: "Importa un backup cifrato per unire persone, intervalli, fonti e testi personalizzati con quelli già presenti.",
                     },
                     {
                       icon: <FileSpreadsheet size={18} />,
@@ -4316,7 +4316,7 @@ function EmptyPatient() {
   return (
     <section className="empty-panel">
       <UsersRound size={36} />
-      <h2>Aggiungi il primo paziente</h2>
+      <h2>Aggiungi la prima persona</h2>
       <p>
         Inserisci nome, cognome e data di nascita nella barra laterale. Il sistema
         assegnerà anche un codice stabile per unire correttamente i backup.

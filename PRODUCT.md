@@ -10,7 +10,7 @@ Clinici, equipe territoriali e servizi che usano CANS per costruire una visione 
 
 ## Product Purpose
 
-L'app consente di registrare pazienti, compilare CANS 0-5 o CANS 5-17+ a piu intervalli temporali, ottenere sintesi operative dei risultati, visualizzare una stella CANS per domini e confrontare l'andamento del paziente tra valutazioni.
+L'app consente di registrare persone, compilare CANS 0-5 o CANS 5-17+ a piu intervalli temporali, ottenere sintesi operative dei risultati, visualizzare una stella CANS per domini e confrontare l'andamento della persona tra valutazioni.
 
 ## Brand Personality
 
@@ -26,7 +26,7 @@ Non deve sembrare una landing page sanitaria, un gestionale generico pieno di ca
 - Rendere visibile il cambiamento nel tempo senza nascondere i singoli item.
 - Separare compilazione, risultati e confronto per ridurre il carico cognitivo.
 - Usare linguaggio clinico chiaro, coerente con CANS e orientato alla collaborazione.
-- Preservare la tracciabilita: ogni risultato deve risalire a paziente, strumento, data e intervallo.
+- Preservare la tracciabilita: ogni risultato deve risalire a persona, strumento, data e intervallo.
 
 ## Accessibility & Inclusion
 

@@ -5,7 +5,7 @@ nel tempo degli strumenti CANS 0-5 e CANS 5-17+.
 
 ## Funzioni principali
 
-- gestione di più pazienti e intervalli temporali;
+- gestione di più persone e intervalli temporali;
 - sottosomministrazioni separate per genitori, clinici e altre fonti;
 - sospensione e ripresa delle compilazioni;
 - moduli di approfondimento aperti sotto il relativo item di screening;
