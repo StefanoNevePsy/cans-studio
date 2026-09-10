@@ -11,6 +11,7 @@ import {
   LockKeyhole,
   Menu,
   Moon,
+  Pencil,
   Plus,
   Radar,
   Search,
@@ -39,6 +40,7 @@ import { EmptyPatient } from "./components/common/EmptyPatient";
 import { TabButton } from "./components/common/TabButton";
 import { AssessmentContextBar } from "./components/common/AssessmentContextBar";
 import { BackupDialog } from "./components/dialogs/BackupDialog";
+import { EditPatientDialog } from "./components/dialogs/EditPatientDialog";
 import { FusionDialog } from "./components/dialogs/FusionDialog";
 import { HelpDialog } from "./components/dialogs/HelpDialog";
 import { ItemInfoDialog } from "./components/dialogs/ItemInfoDialog";
@@ -107,6 +109,7 @@ export function App() {
   const [birthMonthDraft, setBirthMonthDraft] = useState("");
   const [birthYearDraft, setBirthYearDraft] = useState("");
   const [infoState, setInfoState] = useState<ItemInfoState | null>(null);
+  const [editingPatient, setEditingPatient] = useState<Patient | null>(null);
   const [fusionDraft, setFusionDraft] = useState<FusionDraft | null>(null);
   const [backupDialog, setBackupDialog] = useState<BackupDialogState | null>(null);
   const [helpOpen, setHelpOpen] = useState(false);
@@ -270,6 +273,45 @@ export function App() {
     setBirthMonthDraft("");
     setBirthYearDraft("");
     setNotice(`Aggiunta la persona ${patientName(patient)}.`);
+  };
+
+  const updatePatient = (
+    patientId: string,
+    patch: { firstName: string; lastName: string; birthDate: string; code: string },
+  ) => {
+    updateState((current) => ({
+      ...current,
+      patients: current.patients.map((patient) =>
+        patient.id === patientId ? { ...patient, ...patch } : patient,
+      ),
+    }));
+    setNotice(`Dati aggiornati per ${patch.firstName} ${patch.lastName}.`);
+  };
+
+  const deletePatient = (patientId: string) => {
+    updateState((current) => {
+      const remainingPatients = current.patients.filter((p) => p.id !== patientId);
+      const remainingAssessments = current.assessments.filter(
+        (a) => a.patientId !== patientId,
+      );
+      const nextPatient = remainingPatients[0];
+      const nextAssessment = remainingAssessments.find(
+        (a) => a.patientId === nextPatient?.id,
+      );
+
+      return {
+        ...current,
+        patients: remainingPatients,
+        assessments: remainingAssessments,
+        selectedPatientId: nextPatient?.id ?? "",
+        selectedAssessmentId: nextAssessment?.id ?? "",
+        selectedAdministrationId:
+          nextAssessment?.status === "final"
+            ? finalAdministrationId
+            : nextAssessment?.administrations[0]?.id ?? "",
+      };
+    });
+    setNotice("Persona e relative valutazioni eliminate.");
   };
 
   const addAssessment = (instrumentId: CansInstrument["id"]) => {
@@ -973,11 +1015,23 @@ export function App() {
             </button>
             <div>
               <p className="eyeline">Persona selezionata</p>
-              <h1>
-                {selectedPatient
-                  ? patientName(selectedPatient)
-                  : "Nessuna persona selezionata"}
-              </h1>
+              <div className="topbar-patient-title-row">
+                <h1>
+                  {selectedPatient
+                    ? patientName(selectedPatient)
+                    : "Nessuna persona selezionata"}
+                </h1>
+                {selectedPatient && (
+                  <button
+                    className="icon-button compact edit-patient-btn"
+                    onClick={() => setEditingPatient(selectedPatient)}
+                    title="Modifica dati persona (nome, cognome, data di nascita, codice)"
+                    aria-label="Modifica dati persona"
+                  >
+                    <Pencil size={15} />
+                  </button>
+                )}
+              </div>
               <div className="meta-row">
                 {selectedPatient && (
                   <>
@@ -1016,6 +1070,13 @@ export function App() {
             </button>
             {selectedPatient && (
               <>
+                <button
+                  className="secondary-button"
+                  onClick={() => setEditingPatient(selectedPatient)}
+                  title="Modifica nome, cognome, data di nascita o codice"
+                >
+                  <Pencil size={15} /> Modifica persona
+                </button>
                 <button
                   className="secondary-button"
                   onClick={() => addAssessment("cans-0-5")}
@@ -1200,6 +1261,14 @@ export function App() {
               ? exportEncryptedBackup
               : importEncryptedBackup
           }
+        />
+      )}
+      {editingPatient && (
+        <EditPatientDialog
+          patient={editingPatient}
+          close={() => setEditingPatient(null)}
+          onSave={(updated) => updatePatient(editingPatient.id, updated)}
+          onDelete={(id) => deletePatient(id)}
         />
       )}
       {helpOpen && <HelpDialog close={() => setHelpOpen(false)} />}
