@@ -15,21 +15,18 @@ const metaHeaderCell = (value: string): XlsxCell => ({
   value,
   fontWeight: "bold",
   backgroundColor: "#EDEAFB",
-  color: "#211839",
 });
 
 const groupingHeaderCell = (value: string): XlsxCell => ({
   value,
   fontWeight: "bold",
   backgroundColor: "#DDD6FE",
-  color: "#2E1065",
 });
 
 const itemHeaderCell = (value: string): XlsxCell => ({
   value,
   fontWeight: "bold",
   backgroundColor: "#F1F5F9",
-  color: "#0F172A",
 });
 
 const headerRow = (values: string[]): XlsxCell[] =>
@@ -37,7 +34,7 @@ const headerRow = (values: string[]): XlsxCell[] =>
 
 const textCell = (value: string): XlsxCell => ({ value });
 const numberCell = (value: number): XlsxCell => ({ value, type: Number });
-const emptyCell = (): XlsxCell => ({ value: null });
+const emptyCell = (): XlsxCell => ({ value: undefined });
 
 function computeAgeAtDate(birthDate: string, targetDate: string): number | null {
   if (!birthDate || !targetDate) return null;
