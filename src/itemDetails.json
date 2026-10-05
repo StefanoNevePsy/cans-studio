@@ -2430,12 +2430,12 @@
     "manualTitle": "SCUOLA COME PUNTO DI FORZA",
     "source": "cans-5-17",
     "page": 30,
-    "description": "Questo item valuta se la",
+    "description": "Questo item valuta se la scuola è in grado di dare risposta ai bisogni dell’utente, collaborando con utente e famiglia, e/o il livello di investimento scolastico dell’utente al di là dei risultati ottenuti. Valutare il livello più alto negli ultimi 30 giorni.",
     "scoreHints": {
-      "0": "La",
-      "1": "La",
-      "2": "La",
-      "3": "La"
+      "0": "La scuola collabora strettamente con l'utente e la famiglia per identificare e indirizzare con successo i bisogni educativi dell'utente OPPURE l'utente manifesta un elevato livello di investimento scolastico e ottiene risultati eccellenti.",
+      "1": "La scuola collabora con l'utente e la famiglia per identificare e fornire sostegno ai bisogni educativi, OPPURE l'utente investe attivamente nella scuola.",
+      "2": "La scuola non è attualmente in grado di fornire un sostegno adeguato ai bisogni dell'utente OPPURE l’utente manifesta uno scarso livello di investimento scolastico.",
+      "3": "La scuola è riluttante e/o incapace di lavorare per identificare i bisogni dell'utente e agire su di essi OPPURE l’utente non manifesta alcun investimento nell’ambito scolastico."
     },
     "match": 1.0
   },

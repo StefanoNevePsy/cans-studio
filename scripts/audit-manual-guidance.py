@@ -568,8 +568,7 @@ def trim_trailing_manual_sections(text: str) -> str:
     cleaned = re.split(
         r"\s+(?:FINE DEL (?:MODULO|DOMINIO)\b|MODULO \(|PUNTI DI FORZA DELL|"
         r"BISOGNI E RISORSE COSTANTI|BISOGNI EMOTIVO-COMPORTAMENTALI|"
-        r"ET[ÀA’'] DI TRANSIZIONE|FATTORI DI RISCHIO(?: STORICI)?|"
-        r"SCUOLA(?:\s|$))",
+        r"ET[ÀA’'] DI TRANSIZIONE|FATTORI DI RISCHIO(?: STORICI)?)",
         text,
         maxsplit=1,
         flags=re.IGNORECASE,
